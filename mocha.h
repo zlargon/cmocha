@@ -7,7 +7,7 @@
  * @param description
  * @param testCase      function => int testCase();
  */
-#define describe(description, testCase...) __describe(description, #testCase, testCase)
+#define describe(description, ...) __describe(description, #__VA_ARGS__, __VA_ARGS__)
 
 /**
  * void assert(expression);
