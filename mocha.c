@@ -2,8 +2,13 @@
 #include <stdlib.h>     // calloc, free
 #include <string.h>     // strlen, strcmp, memcpy, strtok_r
 #include <stdarg.h>     // va_start, va_end, va_list
-#include <sys/time.h>   // gettimeofday
 #include "mocha.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/time.h>   // gettimeofday
+#endif
 
 // color
 #define COLOR_DARK_GRAY "\033[1;30m"
@@ -20,10 +25,34 @@
 typedef int (* TestCase)();
 
 // currentTime
-static long long currentTime() {
-    struct timeval time = {};
-    gettimeofday(&time, NULL);
-    return (long long) time.tv_sec * 1000 + (long long) time.tv_usec / 1000;
+// https://stackoverflow.com/a/728092/
+static unsigned long long currentTime() {
+#ifdef _WIN32
+    SYSTEMTIME systime;
+    FILETIME filetime;
+
+    GetSystemTime(&systime);
+    if (!SystemTimeToFileTime(&systime, &filetime)) {
+        return 0;
+    }
+
+    unsigned long long ns_since_1601;
+    ULARGE_INTEGER * ptr = (ULARGE_INTEGER*)&ns_since_1601;
+
+    // copy the result into the ULARGE_INTEGER; this is actually
+    // copying the result into the ns_since_1601 unsigned long long.
+    ptr->u.LowPart = filetime.dwLowDateTime;
+    ptr->u.HighPart = filetime.dwHighDateTime;
+
+    // Compute the number of milliseconds since 1601; we have to
+    // divide by 10,000, since the current value is the number of 100ns
+    // intervals since 1601, not ms.
+    return (ns_since_1601 / 10000);
+#else
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long long)tv.tv_usec) / 1000);
+#endif
 }
 
 // __describe
