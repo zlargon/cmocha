@@ -40,8 +40,7 @@ void __describe(const char * description, const char * testCaseNames, TestCase t
     va_start(ap, testCaseList);
     TestCase testCase = testCaseList;
 
-    char * ptr;
-    char * testName = strtok_r(names, ", ", &ptr);
+    char * testName = strtok(names, ", ");
     while (testName != NULL) {
 
         // replace '_' to ' '
@@ -70,7 +69,7 @@ void __describe(const char * description, const char * testCaseNames, TestCase t
             fail++;
         }
 
-        testName = strtok_r(NULL, ", ", &ptr);
+        testName = strtok(NULL, ", ");
         testCase = va_arg(ap, TestCase);
     }
     free(names);
