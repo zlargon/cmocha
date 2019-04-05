@@ -62,7 +62,7 @@ void __describe(const char * description, const char * testCaseNames, TestCase t
     printf("\n  \033[4m%s" COLOR_RESET, description);
 
     size_t len = strlen(testCaseNames);
-    char * names = (char *) calloc(len, sizeof(char));
+    char * names = (char *) calloc(len + 1, sizeof(char));
     memcpy(names, testCaseNames, len);
 
     va_list ap;
