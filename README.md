@@ -37,23 +37,31 @@ int main() {
 }
 ```
 
-# Run Example
+# Build Example with CMake
 
-1. install [cmake](https://cmake.org/)
+- install [cmake](https://cmake.org/) build tool
 
-```
-cd example          # go to example folder
+```bash
+cd example
 
-mkdir build         # create 'build' folder
+mkdir build             # create your build folder
 cd build
 
-cmake ..            # generate build project
-cmake --build .     # build code
+cmake ..                # generate build project
+cmake --build .         # build code
 
-./example           # run example
+./example               # run example
+./Debug/example.exe     # run example (on windows)
 ```
 
-![test](https://user-images.githubusercontent.com/2791834/55655665-cc0a2680-57c2-11e9-9b82-e26f1336a894.png)
+Windows:
+`Font Color` and `Check Symbol` can display fine with [Windows Git Bash](https://gitforwindows.org/) but break with `cmd` and `PowerShell`
+
+![windows git bash](https://user-images.githubusercontent.com/2791834/55674356-a4c65e80-5881-11e9-91d8-7c8471320209.PNG)
+
+# Demo
+
+[![asciicast](https://asciinema.org/a/239276.svg)](https://asciinema.org/a/239276)
 
 # License
 
