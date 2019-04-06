@@ -11,6 +11,7 @@
 #endif
 
 // color
+#define UNDERSCORE      "\033[4m"
 #define COLOR_DARK_GRAY "\033[1;30m"
 #define COLOR_RED       "\033[0;31m"
 #define COLOR_GREEN     "\033[0;32m"
@@ -59,7 +60,12 @@ static unsigned long long currentTime() {
 void __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
     int pass = 0, fail = 0;
     long long describeStart = currentTime();
-    printf("\n  \033[4m%s" COLOR_RESET, description);
+    printf(
+        "\n  "
+        UNDERSCORE "%s"     // description
+        COLOR_RESET,
+        description
+    );
 
     size_t len = strlen(testCaseNames);
     char * names = (char *) calloc(len + 1, sizeof(char));
