@@ -9,16 +9,19 @@ compiler:
   - gcc
   - clang
 
-before_script:
-  - cd example
-  - mkdir build
-  - cd build
-
 script:
+  - mkdir -p example/build
+  - cd example/build
   - cmake ..
   - cmake --build .
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
       ./Debug/example.exe;
     else
       ./example;
+    fi;
+    if [ $? -eq 0 ]; then
+      echo "MOCHA TEST FAILED";
+      exit -1;
+    else
+      echo "MOCHA TEST PASS";
     fi
