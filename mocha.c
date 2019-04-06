@@ -56,7 +56,8 @@ static unsigned long long currentTime() {
 
 // printTestName
 static int printTestName(const char * str, int startIndex) {
-    for (int i = startIndex; ; i++) {
+    int i;
+    for (i = startIndex; ; i++) {
         char c = str[i];
         switch (c) {
             case ',':   continue;
@@ -81,7 +82,8 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
     va_start(ap, testCaseList);
 
     int pass = 0, fail = 0, index = 0;
-    for (TestCase testCase = testCaseList; index != -1; testCase = va_arg(ap, TestCase)) {
+    TestCase testCase;
+    for (testCase = testCaseList; index != -1; testCase = va_arg(ap, TestCase)) {
 
         // execute the test case and calulate the duration time
         unsigned long long startTime = currentTime();
