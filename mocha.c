@@ -70,7 +70,7 @@ static int printTestName(const char * str, int startIndex) {
 
 // __describe
 int __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
-    long long describeStart = currentTime();
+    unsigned long long describeStart = currentTime();
     printf(
         "\n  "
         UNDERSCORE "%s"     // description
