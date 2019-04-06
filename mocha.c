@@ -92,11 +92,11 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
 
         // Report
         if (result == 0) {
-            // pass: ✓ xxxx (100 ms)
+            // pass: v xxxx (100 ms)
             pass++;
 
             printf(
-                COLOR_GREEN "    ✓ "
+                COLOR_GREEN "    v "
                 COLOR_DARK_GRAY
             );
             index = printTestName(testCaseNames, index);
@@ -106,10 +106,10 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
                 duration
             );
         } else {
-            // fail: ✘ xxxx
+            // fail: 1) xxxx
             fail++;
 
-            printf(COLOR_RED "    ✘ ");
+            printf(COLOR_RED "    %d) ", fail);
             index = printTestName(testCaseNames, index);
             printf(COLOR_RESET);
         }
