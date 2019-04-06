@@ -57,7 +57,7 @@ static unsigned long long currentTime() {
 }
 
 // __describe
-void __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
+int __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
     int pass = 0, fail = 0;
     long long describeStart = currentTime();
     printf(
@@ -110,12 +110,13 @@ void __describe(const char * description, const char * testCaseNames, TestCase t
     free(names);
 
     // Final Report
+    int result = fail > 0 ? -1 : 0;
     printf(COLOR_GREEN "\n\n  %d passing " COLOR_DARK_GRAY "(%lldms)" COLOR_RESET, pass, currentTime() - describeStart);
-    if (fail > 0) {
+    if (result == -1) {
         printf(COLOR_RED "  %d failing\n" COLOR_RESET, fail);
-        abort();
     }
     puts("");
+    return result;
 }
 
 // __assert_fail

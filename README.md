@@ -22,7 +22,7 @@ int test2() {
 
 int main() {
     /**
-     *  void describe(
+     *  int describe(
      *      const char * description,
      *      int (* testCase)(), ...
      *  );
@@ -33,7 +33,6 @@ int main() {
         test2
     );
 
-    /* if there is any test failed, `abort()` will be called */
     return 0;
 }
 ```

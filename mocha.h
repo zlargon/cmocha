@@ -2,10 +2,12 @@
 #define __MOCHA_H
 
 /**
- * void describe(const char * description, int (* testCase)(), ...);
+ * int describe(const char * description, int (* testCase)(), ...);
  *
  * @param description
  * @param testCase      function => int testCase();
+ * @return 0            all pass
+ *         -1           at least one failed
  */
 #define describe(description, ...) __describe(description, #__VA_ARGS__, __VA_ARGS__)
 
@@ -21,7 +23,7 @@
     }
 
 /* internal function */
-void __describe(const char * description, const char * testCaseNames, int (* testCaseList)(), ...);
+int __describe(const char * description, const char * testCaseNames, int (* testCaseList)(), ...);
 void __assert_fail(const char * expression, const char * file, int line, const char * func);
 
 #endif
