@@ -1,5 +1,16 @@
 # cmocha
-C testing tool in mocha style
+
+[![Build Status](https://travis-ci.com/zlargon/cmocha.svg?branch=master)](https://travis-ci.com/zlargon/cmocha)
+
+C testing tool with mocha style
+
+## Support Platform
+
+- Mac
+- Linux
+- Windows
+
+## Example
 
 ```c
 #include "mocha.h"
@@ -37,7 +48,7 @@ int main() {
 }
 ```
 
-# Build Example with CMake
+## Build Example with CMake
 
 - install [cmake](https://cmake.org/) build tool
 
@@ -54,15 +65,16 @@ cmake --build .         # build code
 ./Debug/example.exe     # run example (on windows)
 ```
 
-Windows:
+## Windows
+
 `Font Color` and `Check Symbol` can display fine with [Windows Git Bash](https://gitforwindows.org/) but break with `cmd` and `PowerShell`
 
 ![windows git bash](https://user-images.githubusercontent.com/2791834/55674356-a4c65e80-5881-11e9-91d8-7c8471320209.PNG)
 
-# Demo
+## Demo
 
 [![asciicast](https://asciinema.org/a/239276.svg)](https://asciinema.org/a/239276)
 
-# License
+## License
 
 MIT
