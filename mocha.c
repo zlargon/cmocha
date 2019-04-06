@@ -1,6 +1,4 @@
-#include <stdio.h>      // fprintf, stdout
-#include <stdlib.h>     // calloc, free
-#include <string.h>     // strlen, strcmp, memcpy, strtok_r
+#include <stdio.h>      // printf, putchar
 #include <stdarg.h>     // va_start, va_end, va_list
 #include "mocha.h"
 
@@ -56,9 +54,21 @@ static unsigned long long currentTime() {
 #endif
 }
 
+// printTestName
+static int printTestName(const char * str, int startIndex) {
+    for (int i = startIndex; ; i++) {
+        char c = str[i];
+        switch (c) {
+            case ',':   continue;
+            case ' ':   return i + 1;
+            case '\0':  return -1;
+            default:    putchar(c == '_' ? ' ' : c);    // replace '_' to ' '
+        }
+    }
+}
+
 // __describe
 int __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
-    int pass = 0, fail = 0;
     long long describeStart = currentTime();
     printf(
         "\n  "
@@ -67,54 +77,64 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
         description
     );
 
-    size_t len = strlen(testCaseNames);
-    char * names = (char *) calloc(len + 1, sizeof(char));
-    memcpy(names, testCaseNames, len);
-
     va_list ap;
     va_start(ap, testCaseList);
-    TestCase testCase = testCaseList;
 
-    char * testName = strtok(names, ", ");
-    while (testName != NULL) {
+    int pass = 0, fail = 0, index = 0;
+    for (TestCase testCase = testCaseList; index != -1; testCase = va_arg(ap, TestCase)) {
 
-        // replace '_' to ' '
-        size_t i;
-        for (i = 0; testName[i] != '\0'; i++) {
-            if (testName[i] == '_') testName[i] = ' ';
-        }
-
-        long long testStart = currentTime();
+        // execute the test case and calulate the duration time
+        unsigned long long startTime = currentTime();
         int result = testCase();
+        unsigned long long duration = currentTime() - startTime;
 
         // Report
         if (result == 0) {
             // pass: ✓ xxxx (100 ms)
-            printf(
-                COLOR_GREEN     "    ✓"
-                COLOR_DARK_GRAY " %s"
-                COLOR_YELLOW    " (%lldms)" COLOR_RESET,
-                testName,
-                currentTime() - testStart
-            );
             pass++;
+
+            printf(
+                COLOR_GREEN "    ✓ "
+                COLOR_DARK_GRAY
+            );
+            index = printTestName(testCaseNames, index);
+            printf(
+                COLOR_YELLOW " (%lldms)" // duration
+                COLOR_RESET,
+                duration
+            );
         } else {
             // fail: ✘ xxxx
-            printf(COLOR_RED "    ✘ %s" COLOR_RESET, testName);
             fail++;
-        }
 
-        testName = strtok(NULL, ", ");
-        testCase = va_arg(ap, TestCase);
+            printf(COLOR_RED "    ✘ ");
+            index = printTestName(testCaseNames, index);
+            printf(COLOR_RESET);
+        }
     }
-    free(names);
+
+    va_end(ap);
 
     // Final Report
     int result = fail > 0 ? -1 : 0;
-    printf(COLOR_GREEN "\n\n  %d passing " COLOR_DARK_GRAY "(%lldms)" COLOR_RESET, pass, currentTime() - describeStart);
+    // pass report
+    printf(
+        COLOR_GREEN     "\n\n  %d passing " // pass
+        COLOR_DARK_GRAY "(%lldms)"          // duration
+        COLOR_RESET,
+        pass,
+        currentTime() - describeStart
+    );
+
+    // fail report
     if (result == -1) {
-        printf(COLOR_RED "  %d failing\n" COLOR_RESET, fail);
+        printf(
+            COLOR_RED "  %d failing"        // fail
+            COLOR_RESET,
+            fail
+        );
     }
+
     puts("");
     return result;
 }
