@@ -1,0 +1,24 @@
+os:
+  - linux
+  - osx
+  - windows
+
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+before_script:
+  - cd example
+  - mkdir build
+  - cd build
+
+script:
+  - cmake ..
+  - cmake --build .
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
+      ./Debug/example.exe;
+    else
+      ./example;
+    fi
