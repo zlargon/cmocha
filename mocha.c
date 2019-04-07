@@ -1,3 +1,4 @@
+#include <stdbool.h>    // bool, true, false
 #include <stdio.h>      // printf, putchar
 #include <stdarg.h>     // va_start, va_end, va_list
 #include "mocha.h"
@@ -11,13 +12,42 @@
 // TestCase
 typedef int (* TestCase)();
 
-#define RESET       "\033[0m"
-#define UNDERLINE   "\033[4m"
-#define DARK_GRAY   "\033[1;30m"
-#define RED         "\033[0;31m"
-#define GREEN       "\033[0;32m"
-#define YELLOW      "\033[0;33m"
-#define setFontStyle(style) printf(style);
+// setFontStyle
+#ifdef _WIN32
+    // https://docs.microsoft.com/en-us/windows/console/console-screen-buffers
+    // https://stackoverflow.com/a/9203489
+    // https://stackoverflow.com/a/17125539
+    #define RESET       DEFAULT_STYLE
+    #define UNDERLINE   (FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | COMMON_LVB_UNDERSCORE)
+    #define DARK_GRAY   FOREGROUND_INTENSITY
+    #define RED         (FOREGROUND_INTENSITY | FOREGROUND_RED)
+    #define GREEN       FOREGROUND_GREEN
+    #define YELLOW      (FOREGROUND_RED | FOREGROUND_GREEN)
+    #define setFontStyle(style) SetConsoleTextAttribute(hConsole, DEFAULT_BACKGROUND | style);
+
+    static HANDLE hConsole;
+    static WORD DEFAULT_STYLE;
+    static WORD DEFAULT_BACKGROUND;
+    static void initStyle() {
+        static isInit = false;
+        if (isInit) return;
+        isInit = true;
+
+        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+        GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+        DEFAULT_STYLE = consoleInfo.wAttributes;
+        DEFAULT_BACKGROUND = DEFAULT_STYLE & 0b1111111111110000;
+    }
+#else
+    #define RESET       "\033[0m"
+    #define UNDERLINE   "\033[4m"
+    #define DARK_GRAY   "\033[1;30m"
+    #define RED         "\033[0;31m"
+    #define GREEN       "\033[0;32m"
+    #define YELLOW      "\033[0;33m"
+    #define setFontStyle(style) printf(style);
+#endif
 
 // currentTime
 // https://stackoverflow.com/a/728092/
@@ -66,6 +96,9 @@ static int printTestName(const char * str, int startIndex) {
 
 // __describe
 int __describe(const char * description, const char * testCaseNames, TestCase testCaseList, ...) {
+#ifdef _WIN32
+    initStyle();
+#endif
     unsigned long long describeStart = currentTime();
 
     printf("\n  ");
@@ -133,6 +166,9 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
 
 // __assert_fail
 void __assert_fail(const char * expression, const char * file, int line, const char * func) {
+#ifdef _WIN32
+    initStyle();
+#endif
     setFontStyle(RED);
     printf("      Assertion Failed: %s, %s (%s:%d)\n", expression, func, file, line);
     setFontStyle(RESET);
