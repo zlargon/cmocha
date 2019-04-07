@@ -23,7 +23,10 @@ typedef int (* TestCase)();
     #define RED         (FOREGROUND_INTENSITY | FOREGROUND_RED)
     #define GREEN       FOREGROUND_GREEN
     #define YELLOW      (FOREGROUND_RED | FOREGROUND_GREEN)
-    #define setFontStyle(style) SetConsoleTextAttribute(hConsole, DEFAULT_BACKGROUND | style);
+    #define setFontStyle(style) {                                       \
+        SetConsoleTextAttribute(hConsole, DEFAULT_BACKGROUND | style);  \
+        if (style == DEFAULT_STYLE) puts("");                           \
+    }
 
     static HANDLE hConsole;
     static WORD DEFAULT_STYLE;
@@ -40,7 +43,7 @@ typedef int (* TestCase)();
         DEFAULT_BACKGROUND = DEFAULT_STYLE & 0b1111111111110000;
     }
 #else
-    #define RESET       "\033[0m"
+    #define RESET       "\033[0m\n"     // return new line
     #define UNDERLINE   "\033[4m"
     #define DARK_GRAY   "\033[1;30m"
     #define RED         "\033[0;31m"
@@ -103,7 +106,7 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
 
     printf("\n  ");
     setFontStyle(UNDERLINE);
-    printf("%s\n", description);
+    printf("%s", description);
     setFontStyle(RESET);
 
     va_list ap;
@@ -128,8 +131,7 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
             setFontStyle(DARK_GRAY);
             index = printTestName(testCaseNames, index);
             setFontStyle(YELLOW);
-            printf(" (%lldms)\n", duration);
-            setFontStyle(RESET);
+            printf(" (%lldms)", duration);
         } else {
             // fail: 1) xxxx
             fail++;
@@ -137,9 +139,8 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
             setFontStyle(RED);
             printf("    %d) ", fail);
             index = printTestName(testCaseNames, index);
-            puts("");
-            setFontStyle(RESET);
         }
+        setFontStyle(RESET);
     }
 
     va_end(ap);
@@ -150,13 +151,13 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
     setFontStyle(GREEN);
     printf("\n\n  %d passing", pass);
     setFontStyle(DARK_GRAY);
-    printf(" (%lldms)\n", currentTime() - describeStart);
+    printf(" (%lldms)", currentTime() - describeStart);
     setFontStyle(RESET);
 
     // fail report
     if (result == -1) {
         setFontStyle(RED);
-        printf("  %d failing\n", fail);
+        printf("  %d failing", fail);
         setFontStyle(RESET);
     }
 
@@ -170,6 +171,6 @@ void __assert_fail(const char * expression, const char * file, int line, const c
     initStyle();
 #endif
     setFontStyle(RED);
-    printf("      Assertion Failed: %s, %s (%s:%d)\n", expression, func, file, line);
+    printf("      Assertion Failed: %s, %s (%s:%d)", expression, func, file, line);
     setFontStyle(RESET);
 }
