@@ -10,6 +10,8 @@ C testing tool with mocha style
 - Linux
 - Windows
 
+![screenshot](https://user-images.githubusercontent.com/2791834/55678160-ecb9a580-58c2-11e9-8e82-2ad2608e3e73.PNG)
+
 ## Example
 
 ```c
@@ -52,12 +54,6 @@ cmake --build .         # build code
 ./example               # run example
 ./Debug/example.exe     # run example (on windows)
 ```
-
-## Windows
-
-`Font Color` and `Check Symbol` can display fine with [Windows Git Bash](https://gitforwindows.org/) but break with `cmd` and `PowerShell`
-
-![windows git bash](https://user-images.githubusercontent.com/2791834/55674356-a4c65e80-5881-11e9-91d8-7c8471320209.PNG)
 
 ## Demo
 
