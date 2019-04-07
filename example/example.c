@@ -1,12 +1,12 @@
 #include "mocha.h"
 
 int test1() {
-    assert(1 == 1);     // pass
+    expect(1 == 1);     // pass
     return 0;           // return 0 to tell mocha this test pass
 }
 
 int test2() {
-    assert(1 == 0);     // fail. automatically return -1 to tell mocha this test fail
+    expect(1 == 0);     // fail. automatically return -1 to tell mocha this test fail
     return 0;           // this line won't be executed
 }
 
@@ -15,7 +15,7 @@ int main() {
     // otherwise, 'describe' will return 0, and test pass
     return describe(
         "Test Example",
-        test1,      // pass
-        test2       // fail
+        test1,          // pass
+        test2           // fail
     );
 }

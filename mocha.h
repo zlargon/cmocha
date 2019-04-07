@@ -12,18 +12,18 @@
 #define describe(description, ...) __describe(description, #__VA_ARGS__, __VA_ARGS__)
 
 /**
- * void assert(expression);
+ * void expect(expression);
  *
- * @param expression
+ * @param expression    a true/false expression
  */
-#define assert(expression)                                          \
+#define expect(expression)                                          \
     if (!(expression)) {                                            \
-        __assert_fail(#expression, __FILE__, __LINE__, __func__);   \
+        __expect_fail(#expression, __FILE__, __LINE__, __func__);   \
         return -1;                                                  \
     }
 
 /* internal function */
 int __describe(const char * description, const char * testCaseNames, int (* testCaseList)(), ...);
-void __assert_fail(const char * expression, const char * file, int line, const char * func);
+void __expect_fail(const char * expression, const char * file, int line, const char * func);
 
 #endif

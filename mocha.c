@@ -165,12 +165,12 @@ int __describe(const char * description, const char * testCaseNames, TestCase te
     return result;
 }
 
-// __assert_fail
-void __assert_fail(const char * expression, const char * file, int line, const char * func) {
+// __expect_fail
+void __expect_fail(const char * expression, const char * file, int line, const char * func) {
 #ifdef _WIN32
     initStyle();
 #endif
     setFontStyle(RED);
-    printf("      Assertion Failed: %s, %s (%s:%d)", expression, func, file, line);
+    printf("      Failed: %s, %s (%s:%d)", expression, func, file, line);
     setFontStyle(RESET);
 }
